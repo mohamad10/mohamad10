@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>پنل مدیریت</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+  <div id="lock" class="lock">
+    <form class="card lock-card" id="lockForm">
+      <h2>پنل مدیریت</h2>
+      <p class="muted" id="lockMsg"></p>
+      <input type="password" id="pass" placeholder="رمز عبور" required autofocus>
+      <button class="btn primary">ورود</button>
+    </form>
+  </div>
+
+  <div id="app" hidden>
+    <header class="nav">
+      <div class="container nav-inner">
+        <span class="brand">پنل مدیریت</span>
+        <span class="saved muted" id="saved">ذخیره شد ✓</span>
+        <a href="index.html" target="_blank" class="btn ghost sm" style="margin-inline-start:auto">مشاهده سایت ↗</a>
+      </div>
+    </header>
+    <main class="container admin">
+      <nav class="tabs" id="tabs"></nav>
+      <section id="panel"></section>
+    </main>
+  </div>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/store.js"></script>
+  <script src="assets/admin.js"></script>
+</body>
+</html>

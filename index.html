@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>رزومه تیم</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="brand" id="brand"></a>
+      <nav class="links">
+        <a href="#services">تخصص‌ها</a>
+        <a href="#team">اعضای تیم</a>
+        <a href="#projects">نمونه‌کارها</a>
+        <a href="#contact">تماس</a>
+      </nav>
+      <button class="icon-btn" id="themeBtn" aria-label="تغییر تم">◐</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="container">
+      <span class="pill">تیم توسعه نرم‌افزار</span>
+      <h1 id="heroName"></h1>
+      <p class="lead" id="heroTagline"></p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn primary">مشاهده نمونه‌کارها</a>
+        <a href="#contact" class="btn ghost">همکاری با ما</a>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </section>
+
+  <section class="section container" id="about-sec">
+    <h2 class="title">درباره ما</h2>
+    <p class="about" id="about"></p>
+  </section>
+
+  <section class="section container" id="services">
+    <h2 class="title">تخصص‌ها و خدمات</h2>
+    <div class="grid services" id="servicesGrid"></div>
+  </section>
+
+  <section class="section container" id="team">
+    <h2 class="title">اعضای تیم</h2>
+    <div class="filters" id="levelFilters"></div>
+    <div class="grid members" id="membersGrid"></div>
+  </section>
+
+  <section class="section container" id="projects">
+    <h2 class="title">نمونه‌کارها</h2>
+    <div class="filters" id="projFilters"></div>
+    <div class="grid projects" id="projectsGrid"></div>
+  </section>
+
+  <section class="section container" id="contact">
+    <div class="contact-card">
+      <h2>پروژه‌ای در ذهن دارید؟</h2>
+      <p>با ما در ارتباط باشید تا ایده شما را به محصول تبدیل کنیم.</p>
+      <div class="contact-info" id="contactInfo"></div>
+      <div class="socials" id="socials"></div>
+    </div>
+  </section>
+
+  <footer class="footer container">
+    <span id="copy"></span>
+    <a href="admin.html">پنل مدیریت</a>
+  </footer>
+
+  <dialog id="memberModal" class="modal"><div id="modalBody"></div></dialog>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/store.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
