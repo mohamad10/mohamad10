@@ -13,6 +13,7 @@
     <form class="card lock-card" id="lockForm">
       <h2>پنل مدیریت</h2>
       <p class="muted" id="lockMsg"></p>
+      <input type="email" id="email" placeholder="ایمیل" dir="ltr" hidden>
       <input type="password" id="pass" placeholder="رمز عبور" required autofocus>
       <button class="btn primary">ورود</button>
     </form>
@@ -22,8 +23,10 @@
     <header class="nav">
       <div class="container nav-inner">
         <span class="brand">پنل مدیریت</span>
-        <span class="saved muted" id="saved">ذخیره شد ✓</span>
+        <span class="saved muted" id="saved"></span>
+        <span class="muted mode" id="mode"></span>
         <a href="index.html" target="_blank" class="btn ghost sm" style="margin-inline-start:auto">مشاهده سایت ↗</a>
+        <button class="btn ghost sm" id="logout">خروج</button>
       </div>
     </header>
     <main class="container admin">
@@ -32,6 +35,7 @@
     </main>
   </div>
 
+  <script src="assets/config.js"></script>
   <script src="assets/data.js"></script>
   <script src="assets/store.js"></script>
   <script src="assets/admin.js"></script>

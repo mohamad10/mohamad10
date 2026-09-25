@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>رزومه تیم</title>
+  <meta name="description" content="">
+  <meta name="theme-color" content="#0b0d14">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
   <link rel="stylesheet" href="assets/style.css">
@@ -64,6 +66,15 @@
       <p>با ما در ارتباط باشید تا ایده شما را به محصول تبدیل کنیم.</p>
       <div class="contact-info" id="contactInfo"></div>
       <div class="socials" id="socials"></div>
+      <form class="contact-form" id="contactForm" hidden>
+        <input name="name" placeholder="نام شما" required maxlength="120">
+        <input name="email" type="email" placeholder="ایمیل" required dir="ltr">
+        <input name="subject" placeholder="موضوع (اختیاری)" class="wide" maxlength="190">
+        <textarea name="body" placeholder="درباره پروژه‌تان بنویسید…" class="wide" required minlength="5" rows="4"></textarea>
+        <input name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+        <button class="btn primary wide">ارسال پیام</button>
+        <p id="cfMsg" class="cf-msg wide" aria-live="polite"></p>
+      </form>
     </div>
   </section>
 
@@ -74,6 +85,7 @@
 
   <dialog id="memberModal" class="modal"><div id="modalBody"></div></dialog>
 
+  <script src="assets/config.js"></script>
   <script src="assets/data.js"></script>
   <script src="assets/store.js"></script>
   <script src="assets/app.js"></script>

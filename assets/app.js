@@ -1,5 +1,7 @@
-const data = Store.load();
 let io;
+(async () => {
+const data = await Store.loadSite();
+document.body.classList.add('ready');
 const $ = s => document.querySelector(s);
 const t = data.team;
 
@@ -9,6 +11,7 @@ setTheme((() => { try { return localStorage.getItem('theme'); } catch (e) {} })(
 $('#themeBtn').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 
 document.title = t.name;
+document.querySelector('meta[name=description]')?.setAttribute('content', t.tagline || '');
 $('#brand').textContent = t.name;
 $('#heroName').textContent = t.name;
 $('#heroTagline').textContent = t.tagline;
@@ -22,7 +25,7 @@ $('#servicesGrid').innerHTML = data.services.map(s => `
 
 const initials = n => n.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('‌');
 const avatar = (m, cls = 'avatar') => m.avatar
-  ? `<img class="${cls}" src="${esc(m.avatar)}" alt="${esc(m.name)}">`
+  ? `<img class="${cls}" src="${esc(safeUrl(m.avatar))}" alt="${esc(m.name)}">`
   : `<div class="${cls} ph">${esc(initials(m.name))}</div>`;
 const levelBadge = l => `<span class="lvl lvl-${esc(l)}">${esc(LEVELS[l] || l)}</span>`;
 
@@ -74,7 +77,7 @@ function openMember(id) {
     </dl>
     <h4>مهارت‌ها</h4><div class="bars">${(m.skills || []).map(bar).join('')}</div>
     ${projs.length ? `<h4>پروژه‌ها</h4><div class="tags">${projs.map(p => `<span class="tag">${esc(p.title)}</span>`).join('')}</div>` : ''}
-    ${(m.links || []).length ? `<div class="socials">${m.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div>` : ''}`;
+    ${(m.links || []).length ? `<div class="socials">${m.links.map(l => `<a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div>` : ''}`;
   $('#memberModal').showModal();
   requestAnimationFrame(() => $('#modalBody').querySelectorAll('.fill').forEach(f => f.classList.add('go')));
 }
@@ -84,14 +87,14 @@ function renderProjects(cat) {
   const list = data.projects.filter(p => !cat || p.category === cat);
   $('#projectsGrid').innerHTML = list.map((p, i) => `
     <article class="card project reveal">
-      <div class="cover" style="${p.image ? `background-image:url('${esc(p.image)}')` : `--h:${(i * 67) % 360}`}">
+      <div class="cover" style="${p.image ? `background-image:url(&quot;${esc(safeUrl(p.image))}&quot;)` : `--h:${(i * 67) % 360}`}">
         ${p.image ? '' : `<span>${esc(p.title[0] || '')}</span>`}</div>
       <div class="p-body">
         <div class="p-top"><span class="tag">${esc(p.category)}</span><span class="muted">${esc(p.year)}</span></div>
         <h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
         <div class="tags">${(p.tech || []).map(x => `<span class="tech">${esc(x)}</span>`).join('')}</div>
         <div class="p-foot"><div class="stack">${(p.members || []).map(id => data.members.find(m => m.id === id)).filter(Boolean).map(m => avatar(m, 'avatar xs')).join('')}</div>
-        ${p.link && p.link !== '#' ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">مشاهده ↗</a>` : ''}</div>
+        ${p.link && p.link !== '#' ? `<a href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener">مشاهده ↗</a>` : ''}</div>
       </div>
     </article>`).join('');
   observe();
@@ -103,7 +106,23 @@ $('#contactInfo').innerHTML = [
   t.email && `<a href="mailto:${esc(t.email)}">✉ ${esc(t.email)}</a>`,
   t.phone && `<a href="tel:${esc(t.phone)}">☏ ${esc(t.phone)}</a>`,
   t.location && `<span>⌖ ${esc(t.location)}</span>`].filter(Boolean).join('');
-$('#socials').innerHTML = (t.socials || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join('');
+$('#socials').innerHTML = (t.socials || []).map(s => `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join('');
+
+/* فرم تماس (فقط وقتی API در دسترس است) */
+const cf = $('#contactForm');
+if (Store.online) {
+  cf.hidden = false;
+  cf.onsubmit = async e => {
+    e.preventDefault();
+    const btn = cf.querySelector('button'), msg = $('#cfMsg');
+    btn.disabled = true; msg.className = 'cf-msg'; msg.textContent = 'در حال ارسال…';
+    try {
+      await Api.req('POST', '/contact', Object.fromEntries(new FormData(cf)));
+      cf.reset(); msg.classList.add('ok'); msg.textContent = 'پیام شما ارسال شد. به‌زودی با شما تماس می‌گیریم ✓';
+    } catch (err) { msg.classList.add('err'); msg.textContent = err.status === 429 ? 'تعداد درخواست زیاد است؛ کمی بعد دوباره تلاش کنید.' : err.message; }
+    btn.disabled = false;
+  };
+}
 
 /* انیمیشن ظاهر شدن */
 
@@ -114,3 +133,4 @@ function observe() {
   document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
 }
 observe();
+})();

@@ -1,0 +1,277 @@
+{
+  "team": {
+    "name": "تیم کدنگار",
+    "tagline": "ما ایده‌های شما را به نرم‌افزارهای سریع، امن و زیبا تبدیل می‌کنیم",
+    "about": "کدنگار یک تیم مستقل توسعه نرم‌افزار است که از سال ۱۳۹۸ روی طراحی و پیاده‌سازی وب‌اپلیکیشن‌ها، اپلیکیشن‌های موبایل و زیرساخت‌های ابری کار می‌کند. تمرکز ما کیفیت کد، تجربه کاربری عالی و تحویل به‌موقع است.",
+    "email": "hello@example.com",
+    "phone": "۰۹۱۲۰۰۰۰۰۰۰",
+    "location": "تهران، ایران",
+    "socials": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/"
+      },
+      {
+        "label": "Telegram",
+        "url": "https://t.me/"
+      }
+    ],
+    "stats": [
+      {
+        "value": "+۴۰",
+        "label": "پروژه موفق"
+      },
+      {
+        "value": "+۶",
+        "label": "سال تجربه"
+      },
+      {
+        "value": "+۲۵",
+        "label": "مشتری راضی"
+      },
+      {
+        "value": "۲۴/۷",
+        "label": "پشتیبانی"
+      }
+    ]
+  },
+  "services": [
+    {
+      "icon": "🌐",
+      "title": "توسعه وب",
+      "desc": "وب‌اپلیکیشن‌های مدرن با React، Next.js و Vue، سریع و سئو‌پسند."
+    },
+    {
+      "icon": "📱",
+      "title": "اپلیکیشن موبایل",
+      "desc": "اپ‌های اندروید و iOS با Flutter و React Native."
+    },
+    {
+      "icon": "⚙️",
+      "title": "بک‌اند و API",
+      "desc": "سرویس‌های مقیاس‌پذیر با Node.js، Django و Go."
+    },
+    {
+      "icon": "☁️",
+      "title": "DevOps و ابر",
+      "desc": "Docker، Kubernetes، CI/CD و مانیتورینگ."
+    },
+    {
+      "icon": "🎨",
+      "title": "طراحی UI/UX",
+      "desc": "طراحی رابط کاربری کاربرمحور در Figma."
+    },
+    {
+      "icon": "🤖",
+      "title": "هوش مصنوعی",
+      "desc": "یکپارچه‌سازی مدل‌های زبانی و یادگیری ماشین در محصول شما."
+    }
+  ],
+  "members": [
+    {
+      "id": "m1",
+      "name": "علی رضایی",
+      "role": "مدیر فنی و معمار نرم‌افزار",
+      "level": "Lead",
+      "years": 9,
+      "avatar": "",
+      "available": true,
+      "location": "تهران",
+      "bio": "طراح معماری سیستم‌های توزیع‌شده با سابقه رهبری تیم‌های فنی در استارتاپ‌ها.",
+      "skills": [
+        {
+          "name": "Go",
+          "level": 95
+        },
+        {
+          "name": "Node.js",
+          "level": 90
+        },
+        {
+          "name": "Kubernetes",
+          "level": 85
+        },
+        {
+          "name": "PostgreSQL",
+          "level": 88
+        }
+      ],
+      "education": "کارشناسی ارشد مهندسی نرم‌افزار",
+      "languages": "فارسی، انگلیسی",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/"
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "name": "سارا محمدی",
+      "role": "توسعه‌دهنده فرانت‌اند",
+      "level": "Senior",
+      "years": 6,
+      "avatar": "",
+      "available": true,
+      "location": "اصفهان",
+      "bio": "عاشق رابط‌های کاربری روان و دسترس‌پذیر؛ متخصص React و انیمیشن‌های وب.",
+      "skills": [
+        {
+          "name": "React",
+          "level": 95
+        },
+        {
+          "name": "TypeScript",
+          "level": 90
+        },
+        {
+          "name": "CSS / Tailwind",
+          "level": 92
+        },
+        {
+          "name": "Figma",
+          "level": 75
+        }
+      ],
+      "education": "کارشناسی مهندسی کامپیوتر",
+      "languages": "فارسی، انگلیسی",
+      "links": [
+        {
+          "label": "Dribbble",
+          "url": "https://dribbble.com/"
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "name": "رضا کریمی",
+      "role": "توسعه‌دهنده موبایل",
+      "level": "Mid",
+      "years": 3,
+      "avatar": "",
+      "available": false,
+      "location": "شیراز",
+      "bio": "توسعه اپلیکیشن‌های چندسکویی با تمرکز بر کارایی و تجربه کاربری.",
+      "skills": [
+        {
+          "name": "Flutter",
+          "level": 88
+        },
+        {
+          "name": "Dart",
+          "level": 85
+        },
+        {
+          "name": "Kotlin",
+          "level": 65
+        },
+        {
+          "name": "Firebase",
+          "level": 78
+        }
+      ],
+      "education": "کارشناسی علوم کامپیوتر",
+      "languages": "فارسی، انگلیسی",
+      "links": []
+    },
+    {
+      "id": "m4",
+      "name": "مریم احمدی",
+      "role": "مهندس داده و هوش مصنوعی",
+      "level": "Junior",
+      "years": 1,
+      "avatar": "",
+      "available": true,
+      "location": "تهران",
+      "bio": "علاقه‌مند به یادگیری ماشین و ساخت پایپ‌لاین‌های داده.",
+      "skills": [
+        {
+          "name": "Python",
+          "level": 80
+        },
+        {
+          "name": "Pandas",
+          "level": 75
+        },
+        {
+          "name": "PyTorch",
+          "level": 60
+        }
+      ],
+      "education": "کارشناسی آمار",
+      "languages": "فارسی، انگلیسی، آلمانی",
+      "links": []
+    }
+  ],
+  "projects": [
+    {
+      "title": "فروشگاه آنلاین نوین",
+      "category": "وب",
+      "year": "۱۴۰۲",
+      "image": "",
+      "link": "#",
+      "desc": "پلتفرم فروش آنلاین با بیش از ۵۰ هزار کاربر فعال، درگاه پرداخت و پنل فروشندگان.",
+      "tech": [
+        "Next.js",
+        "Node.js",
+        "PostgreSQL"
+      ],
+      "members": [
+        "m1",
+        "m2"
+      ]
+    },
+    {
+      "title": "اپ سلامت همراه",
+      "category": "موبایل",
+      "year": "۱۴۰۲",
+      "image": "",
+      "link": "#",
+      "desc": "اپلیکیشن پایش سلامت با اتصال به دستگاه‌های پوشیدنی و گزارش‌های هوشمند.",
+      "tech": [
+        "Flutter",
+        "Firebase"
+      ],
+      "members": [
+        "m3"
+      ]
+    },
+    {
+      "title": "داشبورد تحلیل فروش",
+      "category": "هوش مصنوعی",
+      "year": "۱۴۰۳",
+      "image": "",
+      "link": "#",
+      "desc": "پیش‌بینی فروش با یادگیری ماشین و داشبورد تعاملی برای مدیران.",
+      "tech": [
+        "Python",
+        "React",
+        "FastAPI"
+      ],
+      "members": [
+        "m2",
+        "m4"
+      ]
+    },
+    {
+      "title": "زیرساخت ابری بانک",
+      "category": "DevOps",
+      "year": "۱۴۰۱",
+      "image": "",
+      "link": "#",
+      "desc": "مهاجرت سرویس‌ها به Kubernetes با CI/CD خودکار و آپتایم ۹۹.۹٪.",
+      "tech": [
+        "Kubernetes",
+        "Go",
+        "Prometheus"
+      ],
+      "members": [
+        "m1"
+      ]
+    }
+  ]
+}

@@ -7,24 +7,67 @@ const h = (html) => { const t = document.createElement('template'); t.innerHTML 
 const PASS_KEY = 'team-site-pass';
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const stored = localStorage.getItem(PASS_KEY);
-$('#lockMsg').textContent = stored ? 'رمز عبور خود را وارد کنید' : 'اولین ورود: یک رمز عبور برای پنل تعیین کنید';
+const lockMsg = (t, err) => { $('#lockMsg').textContent = t; $('#lockMsg').style.color = err ? '#ef4444' : ''; };
+
+if (Store.api) {
+  $('#email').hidden = false; $('#email').required = true;
+  lockMsg('با حساب مدیر وارد شوید');
+  if (Api.token) Api.req('GET', '/auth/me').then(enterApi).catch(() => { Api.token = null; });
+} else {
+  lockMsg(stored ? 'رمز عبور خود را وارد کنید' : 'اولین ورود: یک رمز عبور برای پنل تعیین کنید');
+  if (sessionStorage.getItem('admin-ok')) unlock();
+}
+
 $('#lockForm').onsubmit = async e => {
   e.preventDefault();
-  const hash = await sha($('#pass').value);
-  if (!stored) localStorage.setItem(PASS_KEY, hash);
-  else if (hash !== stored) { $('#lockMsg').textContent = 'رمز عبور اشتباه است'; return; }
-  sessionStorage.setItem('admin-ok', '1'); unlock();
+  const btn = e.target.querySelector('button'); btn.disabled = true;
+  try {
+    if (Store.api) {
+      const r = await Api.req('POST', '/auth/login', { email: $('#email').value, password: $('#pass').value });
+      Api.token = r.token; await enterApi(r.user);
+    } else {
+      const hash = await sha($('#pass').value);
+      if (!stored) localStorage.setItem(PASS_KEY, hash);
+      else if (hash !== stored) throw new Error('رمز عبور اشتباه است');
+      sessionStorage.setItem('admin-ok', '1'); unlock();
+    }
+  } catch (err) { lockMsg(err.message === 'Failed to fetch' ? 'اتصال به سرور برقرار نشد' : err.message, true); }
+  btn.disabled = false;
 };
-function unlock() { $('#lock').remove(); $('#app').hidden = false; showTab('team'); }
-if (sessionStorage.getItem('admin-ok')) unlock();
+
+async function enterApi(user) {
+  data = await Api.req('GET', '/site');
+  $('#mode').textContent = '● متصل به سرور' + (user?.email ? ' — ' + user.email : '');
+  unlock();
+  refreshUnread();
+}
+function unlock() {
+  $('#lock')?.remove(); $('#app').hidden = false;
+  if (!Store.api) $('#mode').textContent = '● حالت محلی (بدون سرور)';
+  showTab('team');
+}
+$('#logout').onclick = async () => {
+  if (Store.api) { await Api.req('POST', '/auth/logout').catch(() => {}); Api.token = null; }
+  sessionStorage.removeItem('admin-ok'); location.reload();
+};
 
 /* ---------- ذخیره خودکار ---------- */
-let timer;
+let timer, syncTimer, syncing = false, pending = false;
+const status = (t, cls = '') => { const el = $('#saved'); el.textContent = t; el.className = 'saved muted show ' + cls; clearTimeout(timer); if (cls === 'ok') timer = setTimeout(() => el.classList.remove('show'), 1500); };
 function save() {
-  Store.save(data);
-  $('#saved').classList.add('show'); clearTimeout(timer);
-  timer = setTimeout(() => $('#saved').classList.remove('show'), 1200);
+  if (!Store.api) { Store.save(data); status('ذخیره شد ✓', 'ok'); return; }
+  status('در حال ذخیره…');
+  clearTimeout(syncTimer); syncTimer = setTimeout(sync, 700);
 }
+async function sync() {
+  if (syncing) { pending = true; return; }
+  syncing = true;
+  try { await Api.req('PUT', '/admin/site', data); status('روی سرور ذخیره شد ✓', 'ok'); }
+  catch (err) { status('خطا: ' + err.message, 'err'); if (err.status === 401) location.reload(); }
+  syncing = false;
+  if (pending) { pending = false; sync(); }
+}
+window.addEventListener('beforeunload', e => { if (syncing || pending || $('#saved').textContent === 'در حال ذخیره…') e.preventDefault(); });
 
 /* ---------- تعریف فیلدها ---------- */
 const S = {
@@ -53,7 +96,7 @@ const S = {
     { k: 'members', l: 'اعضای درگیر در پروژه', t: 'members', wide: 1 }
   ]
 };
-const TABS = { team: 'اطلاعات تیم', services: 'تخصص‌ها و خدمات', members: 'اعضای تیم', projects: 'نمونه‌کارها', tools: 'پشتیبان‌گیری و تنظیمات' };
+const TABS = { team: 'اطلاعات تیم', services: 'تخصص‌ها و خدمات', members: 'اعضای تیم', projects: 'نمونه‌کارها', messages: 'پیام‌ها', tools: 'پشتیبان‌گیری و تنظیمات' };
 const NEW = {
   services: () => ({ icon: '✨', title: 'خدمت جدید', desc: '' }),
   members: () => ({ id: 'm' + Date.now().toString(36), name: 'عضو جدید', role: '', level: 'Mid', years: 1, avatar: '', available: true, bio: '', skills: [], links: [], location: '', education: '', languages: '' }),
@@ -91,10 +134,20 @@ function imageField(obj, k) {
   url.oninput = () => { obj[k] = url.value; save(); prev.style.backgroundImage = `url("${url.value}")`; };
   up.onclick = () => file.click();
   del.onclick = () => { obj[k] = ''; save(); show(); };
-  file.onchange = async () => { if (file.files[0]) { obj[k] = await shrink(file.files[0]); save(); show(); } };
+  file.onchange = async () => {
+    const f = file.files[0]; if (!f) return;
+    up.disabled = true; up.textContent = '…';
+    try {
+      if (Store.api) { const fd = new FormData(); fd.append('file', await shrinkBlob(f), 'image.jpg'); obj[k] = (await Api.req('POST', '/admin/uploads', fd)).url; }
+      else obj[k] = await shrink(f);
+      save(); show();
+    } catch (err) { alert('آپلود ناموفق: ' + err.message); }
+    up.disabled = false; up.textContent = 'آپلود'; file.value = '';
+  };
   show(); return el;
 }
 /* فشرده‌سازی تصویر آپلودی تا حجم داده‌ها کم بماند */
+const shrinkBlob = async f => (await fetch(await shrink(f))).blob();
 function shrink(f, max = 800) {
   return new Promise(res => {
     const img = new Image(); img.onload = () => {
@@ -133,7 +186,7 @@ function subList(obj, d) {
 
 /* ---------- تب‌ها ---------- */
 let current;
-$('#tabs').innerHTML = Object.entries(TABS).map(([k, l]) => `<button data-k="${k}">${l}</button>`).join('');
+$('#tabs').innerHTML = Object.entries(TABS).filter(([k]) => k !== 'messages' || Store.api).map(([k, l]) => `<button data-k="${k}">${l}</button>`).join('');
 $('#tabs').onclick = e => { const b = e.target.closest('button'); if (b) showTab(b.dataset.k); };
 
 function showTab(k) {
@@ -142,6 +195,7 @@ function showTab(k) {
   const p = $('#panel'); p.innerHTML = '';
   if (k === 'team') { p.append(h(`<div class="head-row"><h2>${TABS[k]}</h2></div>`)); const c = h('<div class="card"></div>'); c.append(form(data.team, S.team)); p.append(c); }
   else if (k === 'tools') tools(p);
+  else if (k === 'messages') messages(p);
   else collection(p, k);
 }
 
@@ -171,22 +225,57 @@ function tools(p) {
   p.append(h(`<div class="head-row"><h2>${TABS.tools}</h2></div>`));
   const w = h(`<div class="tools">
     <div class="card"><h3>انتشار تغییرات روی سایت</h3>
-      <p class="muted">تغییرات فقط در همین مرورگر ذخیره می‌شوند. برای اینکه همه بازدیدکنندگان ببینند، فایل <b>data.js</b> را دانلود و جایگزین <code>assets/data.js</code> در هاست/مخزن کنید.</p>
+      <p class="muted">${Store.api ? 'سایت به سرور متصل است و تغییرات بلافاصله برای همه منتشر می‌شوند. فایل data.js فقط نسخه پشتیبان/حالت آفلاین است.' : 'تغییرات فقط در همین مرورگر ذخیره می‌شوند. برای اینکه همه بازدیدکنندگان ببینند، فایل <b>data.js</b> را دانلود و جایگزین <code>assets/data.js</code> در هاست/مخزن کنید.'}</p>
       <div class="row"><button class="btn primary sm" id="expJs">دانلود data.js</button><button class="btn ghost sm" id="expJson">پشتیبان JSON</button></div></div>
     <div class="card"><h3>بازیابی از فایل پشتیبان</h3><p class="muted">یک فایل JSON پشتیبان را بارگذاری کنید.</p>
       <div class="row"><input type="file" accept=".json,application/json" id="imp" style="max-width:320px"></div></div>
-    <div class="card"><h3>تغییر رمز عبور</h3><p class="muted">رمز فقط برای همین مرورگر است (امنیت واقعی نیاز به سرور دارد).</p>
-      <div class="row"><input type="password" id="np" placeholder="رمز جدید" style="max-width:240px"><button class="btn ghost sm" id="cp">ذخیره رمز</button></div></div>
-    <div class="card"><h3>بازگشت به داده‌های پیش‌فرض</h3><p class="muted">تغییرات ذخیره‌شده در این مرورگر پاک می‌شود.</p>
-      <button class="btn danger sm" id="rst">بازنشانی</button></div></div>`);
+    <div class="card"><h3>تغییر رمز عبور</h3><p class="muted">${Store.api ? 'رمز حساب مدیر روی سرور.' : 'رمز فقط برای همین مرورگر است (امنیت واقعی نیاز به سرور دارد).'}</p>
+      <div class="row">${Store.api ? '<input type="password" id="op" placeholder="رمز فعلی" style="max-width:200px">' : ''}<input type="password" id="np" placeholder="رمز جدید" style="max-width:240px"><button class="btn ghost sm" id="cp">ذخیره رمز</button></div></div>
+    ${Store.api ? '' : `<div class="card"><h3>بازگشت به داده‌های پیش‌فرض</h3><p class="muted">تغییرات ذخیره‌شده در این مرورگر پاک می‌شود.</p>
+      <button class="btn danger sm" id="rst">بازنشانی</button></div>`}</div>`);
   p.append(w);
   const dl = (name, text, type) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); URL.revokeObjectURL(a.href); };
   w.querySelector('#expJs').onclick = () => dl('data.js', '/* داده‌های سایت — خروجی پنل مدیریت */\nwindow.DEFAULT_DATA = ' + JSON.stringify(data, null, 2) + ';\n', 'text/javascript');
   w.querySelector('#expJson').onclick = () => dl('team-backup.json', JSON.stringify(data, null, 2), 'application/json');
   w.querySelector('#imp').onchange = async e => {
-    try { const d = JSON.parse(await e.target.files[0].text()); if (!d.team || !Array.isArray(d.members)) throw 0; data = d; save(); alert('بازیابی شد ✓'); }
+    try { const d = JSON.parse(await e.target.files[0].text()); if (!d.team || !Array.isArray(d.members)) throw 0; data = d; save(); alert('بازیابی شد ✓'); showTab('tools'); }
     catch { alert('فایل نامعتبر است'); }
   };
-  w.querySelector('#cp').onclick = async () => { const v = w.querySelector('#np').value; if (v.length < 4) return alert('حداقل ۴ کاراکتر'); localStorage.setItem(PASS_KEY, await sha(v)); alert('رمز تغییر کرد ✓'); };
-  w.querySelector('#rst').onclick = () => { if (confirm('همه تغییرات پاک شود؟')) { Store.reset(); data = Store.load(); alert('بازنشانی شد'); } };
+  w.querySelector('#cp').onclick = async () => {
+    const v = w.querySelector('#np').value;
+    try {
+      if (Store.api) await Api.req('PUT', '/auth/password', { current_password: w.querySelector('#op').value, password: v });
+      else { if (v.length < 4) throw new Error('حداقل ۴ کاراکتر'); localStorage.setItem(PASS_KEY, await sha(v)); }
+      alert('رمز تغییر کرد ✓');
+    } catch (err) { alert(err.message); }
+  };
+  if (!Store.api) w.querySelector('#rst').onclick = () => { if (confirm('همه تغییرات پاک شود؟')) { Store.reset(); data = Store.load(); alert('بازنشانی شد'); } };
+}
+
+/* ---------- پیام‌های فرم تماس ---------- */
+async function refreshUnread() {
+  try {
+    const { unread } = await Api.req('GET', '/admin/messages');
+    const b = $('#tabs [data-k=messages]'); if (b) b.innerHTML = TABS.messages + (unread ? ` <span class="badge">${unread}</span>` : '');
+    return unread;
+  } catch (e) {}
+}
+async function messages(p) {
+  p.append(h(`<div class="head-row"><h2>${TABS.messages}</h2></div>`));
+  const box = h('<div class="msgs"><p class="muted">در حال بارگذاری…</p></div>'); p.append(box);
+  let list;
+  try { list = (await Api.req('GET', '/admin/messages')).data; } catch (err) { box.innerHTML = `<p class="muted">${esc(err.message)}</p>`; return; }
+  if (current !== 'messages') return;
+  box.innerHTML = list.length ? '' : '<div class="card"><p class="muted">هنوز پیامی نرسیده است.</p></div>';
+  list.forEach(m => {
+    const c = h(`<article class="card msg${m.read_at ? '' : ' unread'}">
+      <div class="head-row"><div><b>${esc(m.name)}</b> <a class="muted" dir="ltr" href="mailto:${esc(m.email)}">${esc(m.email)}</a>
+      <div class="muted">${new Date(m.created_at).toLocaleString('fa-IR')}${m.subject ? ' — ' + esc(m.subject) : ''}</div></div>
+      <div class="acts"><button title="خوانده/نخوانده">${m.read_at ? '○' : '✓'}</button><button class="del" title="حذف">🗑</button></div></div>
+      <p class="msg-body">${esc(m.body)}</p></article>`);
+    const [rd, del] = c.querySelectorAll('.acts button');
+    rd.onclick = async () => { await Api.req('PATCH', `/admin/messages/${m.id}/read`); refreshUnread(); showTab('messages'); };
+    del.onclick = async () => { if (confirm('پیام حذف شود؟')) { await Api.req('DELETE', `/admin/messages/${m.id}`); refreshUnread(); showTab('messages'); } };
+    box.append(c);
+  });
 }
