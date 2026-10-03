@@ -12,14 +12,11 @@ Requires PHP 8.3+ with GD or Imagick (WebP support), and Composer.
 
 ```bash
 cd backend
-composer install
-cp .env.example .env && php artisan key:generate
-# In .env set APP_URL (e.g. https://example-domain.com), ADMIN_EMAIL, ADMIN_PASSWORD
-touch database/database.sqlite          # or configure MySQL in .env
-php artisan migrate --seed              # tables + first admin + sample content
-php artisan storage:link
-php artisan serve                       # http://127.0.0.1:8000
+composer run setup     # install packages, create .env + APP_KEY, migrate + seed, storage link, build assets
+composer run dev       # http://127.0.0.1:8000
 ```
+
+Then set `APP_URL`, `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env` (and MySQL settings if you don't use SQLite).
 
 In production, point the web server's document root at `backend/public`.
 To create an admin or reset a password: `php artisan admin:create you@example.com`
