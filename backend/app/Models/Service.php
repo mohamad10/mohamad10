@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $fillable = ['icon', 'title', 'desc', 'position'];
+
+    protected function casts(): array
+    {
+        return ['title' => 'array', 'desc' => 'array'];
+    }
 }

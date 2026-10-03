@@ -21,6 +21,12 @@ class Member extends Model
             'years' => 'integer',
             'skills' => 'array',
             'links' => 'array',
+            'name' => 'array',
+            'role' => 'array',
+            'location' => 'array',
+            'education' => 'array',
+            'languages' => 'array',
+            'bio' => 'array',
         ];
     }
 

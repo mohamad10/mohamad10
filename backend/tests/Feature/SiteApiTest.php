@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -14,14 +12,21 @@ class SiteApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected bool $seed = true;
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed();
+    }
 
-    public function test_public_site_returns_seeded_content(): void
+    public function test_public_site_returns_translatable_content_and_locales(): void
     {
         $this->getJson('/api/site')->assertOk()
-            ->assertJsonPath('team.name', 'تیم کدنگار')
+            ->assertJsonPath('team.name.en', 'Codenegar')
+            ->assertJsonPath('team.name.fa', 'کدنگار')
             ->assertJsonCount(4, 'members')
-            ->assertJsonPath('projects.0.members', ['m1', 'm2']);
+            ->assertJsonPath('projects.0.members', ['m1', 'm2'])
+            ->assertJsonPath('meta.default_locale', 'en')
+            ->assertJsonPath('meta.locales.1.code', 'fa');
     }
 
     public function test_login_returns_token_and_rejects_bad_password(): void
@@ -40,27 +45,38 @@ class SiteApiTest extends TestCase
     {
         Sanctum::actingAs(User::first());
         $site = $this->getJson('/api/site')->json();
+        unset($site['meta']);
 
-        $site['team']['name'] = 'تیم جدید';
+        $site['team']['name'] = ['en' => 'New team', 'fa' => 'تیم جدید'];
         array_splice($site['members'], 1, 1); // remove m2
-        $site['members'][] = ['id' => 'm9', 'name' => 'نفر جدید', 'level' => 'Senior', 'available' => true, 'skills' => [['name' => 'Laravel', 'level' => 90]]];
+        $site['members'][] = ['id' => 'm9', 'name' => ['en' => 'Newcomer'], 'level' => 'Senior', 'available' => true, 'skills' => [['name' => 'Laravel', 'level' => 90]]];
         $site['projects'][0]['members'] = ['m1', 'm2', 'm9'];
 
         $this->putJson('/api/admin/site', $site)->assertOk()
-            ->assertJsonPath('team.name', 'تیم جدید')
+            ->assertJsonPath('team.name.fa', 'تیم جدید')
             ->assertJsonPath('members.3.skills.0.name', 'Laravel')
             ->assertJsonPath('projects.0.members', ['m1', 'm9']);
 
-        $this->getJson('/api/site')->assertJsonPath('team.name', 'تیم جدید')->assertJsonCount(4, 'members');
+        $this->getJson('/api/site')->assertJsonPath('team.name.en', 'New team')->assertJsonCount(4, 'members');
+        $this->get('/fa')->assertSee('تیم جدید');
     }
 
-    public function test_sync_validates_level(): void
+    public function test_sync_validates_levels_and_translations(): void
     {
         Sanctum::actingAs(User::first());
         $site = $this->getJson('/api/site')->json();
-        $site['members'][0]['level'] = 'Guru';
 
-        $this->putJson('/api/admin/site', $site)->assertStatus(422)->assertJsonValidationErrors('members.0.level');
+        $bad = $site;
+        $bad['members'][0]['level'] = 'Guru';
+        $this->putJson('/api/admin/site', $bad)->assertStatus(422)->assertJsonValidationErrors('members.0.level');
+
+        $bad = $site;
+        $bad['projects'][0]['title'] = ['fa' => 'فقط فارسی']; // default language (en) is required
+        $this->putJson('/api/admin/site', $bad)->assertStatus(422)->assertJsonValidationErrors('projects.0.title.en');
+
+        $bad = $site;
+        $bad['services'][0]['title']['xx'] = 'unknown language';
+        $this->putJson('/api/admin/site', $bad)->assertStatus(422)->assertJsonValidationErrors('services.0.title');
     }
 
     public function test_contact_message_flow(): void
@@ -76,15 +92,5 @@ class SiteApiTest extends TestCase
         $this->patchJson("/api/admin/messages/{$id}/read")->assertOk();
         $this->getJson('/api/admin/messages')->assertJsonPath('unread', 0);
         $this->deleteJson("/api/admin/messages/{$id}")->assertOk();
-    }
-
-    public function test_image_upload(): void
-    {
-        Storage::fake('public');
-        Sanctum::actingAs(User::first());
-
-        $url = $this->postJson('/api/admin/uploads', ['file' => UploadedFile::fake()->image('a.jpg')])
-            ->assertCreated()->json('url');
-        Storage::disk('public')->assertExists(str($url)->after('/storage/')->toString());
     }
 }

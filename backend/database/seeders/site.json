@@ -1,11 +1,23 @@
 {
   "team": {
-    "name": "تیم کدنگار",
-    "tagline": "ما ایده‌های شما را به نرم‌افزارهای سریع، امن و زیبا تبدیل می‌کنیم",
-    "about": "کدنگار یک تیم مستقل توسعه نرم‌افزار است که از سال ۱۳۹۸ روی طراحی و پیاده‌سازی وب‌اپلیکیشن‌ها، اپلیکیشن‌های موبایل و زیرساخت‌های ابری کار می‌کند. تمرکز ما کیفیت کد، تجربه کاربری عالی و تحویل به‌موقع است.",
+    "name": {
+      "en": "Codenegar",
+      "fa": "کدنگار"
+    },
+    "tagline": {
+      "en": "We turn ambitious ideas into fast, secure and beautiful software.",
+      "fa": "ما ایده‌های بلندپروازانه را به نرم‌افزارهای سریع، امن و زیبا تبدیل می‌کنیم."
+    },
+    "about": {
+      "en": "Codenegar is an independent software studio building web platforms, mobile apps and cloud infrastructure since 2019. We care about clean code, thoughtful user experience and shipping on time — and we stay with our clients long after launch.",
+      "fa": "کدنگار یک استودیوی مستقل توسعه نرم‌افزار است که از سال ۱۳۹۸ روی پلتفرم‌های وب، اپلیکیشن‌های موبایل و زیرساخت ابری کار می‌کند. کیفیت کد، تجربه کاربری سنجیده و تحویل به‌موقع برای ما مهم است و پس از راه‌اندازی هم کنار مشتریان‌مان می‌مانیم."
+    },
     "email": "hello@example.com",
-    "phone": "۰۹۱۲۰۰۰۰۰۰۰",
-    "location": "تهران، ایران",
+    "phone": "+98 912 000 0000",
+    "location": {
+      "en": "Tehran, Iran",
+      "fa": "تهران، ایران"
+    },
     "socials": [
       {
         "label": "GitHub",
@@ -22,73 +34,141 @@
     ],
     "stats": [
       {
-        "value": "+۴۰",
-        "label": "پروژه موفق"
+        "value": "40+",
+        "label": {
+          "en": "Projects shipped",
+          "fa": "پروژه موفق"
+        }
       },
       {
-        "value": "+۶",
-        "label": "سال تجربه"
+        "value": "6+",
+        "label": {
+          "en": "Years in business",
+          "fa": "سال تجربه"
+        }
       },
       {
-        "value": "+۲۵",
-        "label": "مشتری راضی"
+        "value": "25+",
+        "label": {
+          "en": "Happy clients",
+          "fa": "مشتری راضی"
+        }
       },
       {
-        "value": "۲۴/۷",
-        "label": "پشتیبانی"
+        "value": "99.9%",
+        "label": {
+          "en": "Uptime delivered",
+          "fa": "آپتایم سرویس‌ها"
+        }
       }
     ]
   },
   "services": [
     {
       "icon": "🌐",
-      "title": "توسعه وب",
-      "desc": "وب‌اپلیکیشن‌های مدرن با React، Next.js و Vue، سریع و سئو‌پسند."
+      "title": {
+        "en": "Web development",
+        "fa": "توسعه وب"
+      },
+      "desc": {
+        "en": "Modern, SEO-friendly web apps built with React, Next.js and Vue.",
+        "fa": "وب‌اپلیکیشن‌های مدرن و سئوپسند با React، Next.js و Vue."
+      }
     },
     {
       "icon": "📱",
-      "title": "اپلیکیشن موبایل",
-      "desc": "اپ‌های اندروید و iOS با Flutter و React Native."
+      "title": {
+        "en": "Mobile apps",
+        "fa": "اپلیکیشن موبایل"
+      },
+      "desc": {
+        "en": "Native-feeling Android and iOS apps with Flutter and React Native.",
+        "fa": "اپ‌های اندروید و iOS با Flutter و React Native."
+      }
     },
     {
       "icon": "⚙️",
-      "title": "بک‌اند و API",
-      "desc": "سرویس‌های مقیاس‌پذیر با Node.js، Django و Go."
+      "title": {
+        "en": "Backend & APIs",
+        "fa": "بک‌اند و API"
+      },
+      "desc": {
+        "en": "Scalable services and APIs with Laravel, Node.js and Go.",
+        "fa": "سرویس‌ها و APIهای مقیاس‌پذیر با Laravel، Node.js و Go."
+      }
     },
     {
       "icon": "☁️",
-      "title": "DevOps و ابر",
-      "desc": "Docker، Kubernetes، CI/CD و مانیتورینگ."
+      "title": {
+        "en": "DevOps & cloud",
+        "fa": "DevOps و ابر"
+      },
+      "desc": {
+        "en": "Docker, Kubernetes, CI/CD pipelines and observability.",
+        "fa": "Docker، Kubernetes، CI/CD و مانیتورینگ."
+      }
     },
     {
       "icon": "🎨",
-      "title": "طراحی UI/UX",
-      "desc": "طراحی رابط کاربری کاربرمحور در Figma."
+      "title": {
+        "en": "UI/UX design",
+        "fa": "طراحی UI/UX"
+      },
+      "desc": {
+        "en": "User-centred interfaces and design systems in Figma.",
+        "fa": "طراحی رابط کاربری کاربرمحور و دیزاین‌سیستم در Figma."
+      }
     },
     {
       "icon": "🤖",
-      "title": "هوش مصنوعی",
-      "desc": "یکپارچه‌سازی مدل‌های زبانی و یادگیری ماشین در محصول شما."
+      "title": {
+        "en": "AI integration",
+        "fa": "هوش مصنوعی"
+      },
+      "desc": {
+        "en": "LLM features, search and machine learning inside your product.",
+        "fa": "یکپارچه‌سازی مدل‌های زبانی و یادگیری ماشین در محصول شما."
+      }
     }
   ],
   "members": [
     {
       "id": "m1",
-      "name": "علی رضایی",
-      "role": "مدیر فنی و معمار نرم‌افزار",
+      "name": {
+        "en": "Ali Rezaei",
+        "fa": "علی رضایی"
+      },
+      "role": {
+        "en": "CTO & Software Architect",
+        "fa": "مدیر فنی و معمار نرم‌افزار"
+      },
       "level": "Lead",
       "years": 9,
       "avatar": "",
       "available": true,
-      "location": "تهران",
-      "bio": "طراح معماری سیستم‌های توزیع‌شده با سابقه رهبری تیم‌های فنی در استارتاپ‌ها.",
+      "location": {
+        "en": "Tehran",
+        "fa": "تهران"
+      },
+      "education": {
+        "en": "M.Sc. Software Engineering",
+        "fa": "کارشناسی ارشد مهندسی نرم‌افزار"
+      },
+      "languages": {
+        "en": "Persian, English",
+        "fa": "فارسی، انگلیسی"
+      },
+      "bio": {
+        "en": "Designs distributed systems and has led engineering teams at several startups.",
+        "fa": "طراح معماری سیستم‌های توزیع‌شده با سابقه رهبری تیم‌های فنی در چند استارتاپ."
+      },
       "skills": [
         {
           "name": "Go",
           "level": 95
         },
         {
-          "name": "Node.js",
+          "name": "Laravel",
           "level": 90
         },
         {
@@ -100,8 +180,6 @@
           "level": 88
         }
       ],
-      "education": "کارشناسی ارشد مهندسی نرم‌افزار",
-      "languages": "فارسی، انگلیسی",
       "links": [
         {
           "label": "GitHub",
@@ -111,14 +189,34 @@
     },
     {
       "id": "m2",
-      "name": "سارا محمدی",
-      "role": "توسعه‌دهنده فرانت‌اند",
+      "name": {
+        "en": "Sara Mohammadi",
+        "fa": "سارا محمدی"
+      },
+      "role": {
+        "en": "Senior Frontend Engineer",
+        "fa": "توسعه‌دهنده ارشد فرانت‌اند"
+      },
       "level": "Senior",
       "years": 6,
       "avatar": "",
       "available": true,
-      "location": "اصفهان",
-      "bio": "عاشق رابط‌های کاربری روان و دسترس‌پذیر؛ متخصص React و انیمیشن‌های وب.",
+      "location": {
+        "en": "Isfahan",
+        "fa": "اصفهان"
+      },
+      "education": {
+        "en": "B.Sc. Computer Engineering",
+        "fa": "کارشناسی مهندسی کامپیوتر"
+      },
+      "languages": {
+        "en": "Persian, English",
+        "fa": "فارسی، انگلیسی"
+      },
+      "bio": {
+        "en": "Loves smooth, accessible interfaces; specialises in React and web animation.",
+        "fa": "عاشق رابط‌های کاربری روان و دسترس‌پذیر؛ متخصص React و انیمیشن وب."
+      },
       "skills": [
         {
           "name": "React",
@@ -137,8 +235,6 @@
           "level": 75
         }
       ],
-      "education": "کارشناسی مهندسی کامپیوتر",
-      "languages": "فارسی، انگلیسی",
       "links": [
         {
           "label": "Dribbble",
@@ -148,14 +244,34 @@
     },
     {
       "id": "m3",
-      "name": "رضا کریمی",
-      "role": "توسعه‌دهنده موبایل",
+      "name": {
+        "en": "Reza Karimi",
+        "fa": "رضا کریمی"
+      },
+      "role": {
+        "en": "Mobile Developer",
+        "fa": "توسعه‌دهنده موبایل"
+      },
       "level": "Mid",
       "years": 3,
       "avatar": "",
       "available": false,
-      "location": "شیراز",
-      "bio": "توسعه اپلیکیشن‌های چندسکویی با تمرکز بر کارایی و تجربه کاربری.",
+      "location": {
+        "en": "Shiraz",
+        "fa": "شیراز"
+      },
+      "education": {
+        "en": "B.Sc. Computer Science",
+        "fa": "کارشناسی علوم کامپیوتر"
+      },
+      "languages": {
+        "en": "Persian, English",
+        "fa": "فارسی، انگلیسی"
+      },
+      "bio": {
+        "en": "Builds cross-platform apps with a focus on performance and UX.",
+        "fa": "توسعه اپلیکیشن‌های چندسکویی با تمرکز بر کارایی و تجربه کاربری."
+      },
       "skills": [
         {
           "name": "Flutter",
@@ -174,20 +290,38 @@
           "level": 78
         }
       ],
-      "education": "کارشناسی علوم کامپیوتر",
-      "languages": "فارسی، انگلیسی",
       "links": []
     },
     {
       "id": "m4",
-      "name": "مریم احمدی",
-      "role": "مهندس داده و هوش مصنوعی",
+      "name": {
+        "en": "Maryam Ahmadi",
+        "fa": "مریم احمدی"
+      },
+      "role": {
+        "en": "Data & AI Engineer",
+        "fa": "مهندس داده و هوش مصنوعی"
+      },
       "level": "Junior",
       "years": 1,
       "avatar": "",
       "available": true,
-      "location": "تهران",
-      "bio": "علاقه‌مند به یادگیری ماشین و ساخت پایپ‌لاین‌های داده.",
+      "location": {
+        "en": "Tehran",
+        "fa": "تهران"
+      },
+      "education": {
+        "en": "B.Sc. Statistics",
+        "fa": "کارشناسی آمار"
+      },
+      "languages": {
+        "en": "Persian, English, German",
+        "fa": "فارسی، انگلیسی، آلمانی"
+      },
+      "bio": {
+        "en": "Into machine learning and building reliable data pipelines.",
+        "fa": "علاقه‌مند به یادگیری ماشین و ساخت پایپ‌لاین‌های داده."
+      },
       "skills": [
         {
           "name": "Python",
@@ -202,22 +336,32 @@
           "level": 60
         }
       ],
-      "education": "کارشناسی آمار",
-      "languages": "فارسی، انگلیسی، آلمانی",
       "links": []
     }
   ],
   "projects": [
     {
-      "title": "فروشگاه آنلاین نوین",
-      "category": "وب",
-      "year": "۱۴۰۲",
+      "title": {
+        "en": "Novin online store",
+        "fa": "فروشگاه آنلاین نوین"
+      },
+      "category": {
+        "en": "Web",
+        "fa": "وب"
+      },
+      "year": {
+        "en": "2023",
+        "fa": "۱۴۰۲"
+      },
       "image": "",
-      "link": "#",
-      "desc": "پلتفرم فروش آنلاین با بیش از ۵۰ هزار کاربر فعال، درگاه پرداخت و پنل فروشندگان.",
+      "link": "",
+      "desc": {
+        "en": "E-commerce platform with 50k+ active users, payment gateway and a seller dashboard.",
+        "fa": "پلتفرم فروش آنلاین با بیش از ۵۰ هزار کاربر فعال، درگاه پرداخت و پنل فروشندگان."
+      },
       "tech": [
         "Next.js",
-        "Node.js",
+        "Laravel",
         "PostgreSQL"
       ],
       "members": [
@@ -226,12 +370,24 @@
       ]
     },
     {
-      "title": "اپ سلامت همراه",
-      "category": "موبایل",
-      "year": "۱۴۰۲",
+      "title": {
+        "en": "Hamrah health app",
+        "fa": "اپ سلامت همراه"
+      },
+      "category": {
+        "en": "Mobile",
+        "fa": "موبایل"
+      },
+      "year": {
+        "en": "2023",
+        "fa": "۱۴۰۲"
+      },
       "image": "",
-      "link": "#",
-      "desc": "اپلیکیشن پایش سلامت با اتصال به دستگاه‌های پوشیدنی و گزارش‌های هوشمند.",
+      "link": "",
+      "desc": {
+        "en": "Health tracking app connected to wearables, with smart weekly reports.",
+        "fa": "اپلیکیشن پایش سلامت با اتصال به دستگاه‌های پوشیدنی و گزارش‌های هوشمند."
+      },
       "tech": [
         "Flutter",
         "Firebase"
@@ -241,12 +397,24 @@
       ]
     },
     {
-      "title": "داشبورد تحلیل فروش",
-      "category": "هوش مصنوعی",
-      "year": "۱۴۰۳",
+      "title": {
+        "en": "Sales analytics dashboard",
+        "fa": "داشبورد تحلیل فروش"
+      },
+      "category": {
+        "en": "AI",
+        "fa": "هوش مصنوعی"
+      },
+      "year": {
+        "en": "2024",
+        "fa": "۱۴۰۳"
+      },
       "image": "",
-      "link": "#",
-      "desc": "پیش‌بینی فروش با یادگیری ماشین و داشبورد تعاملی برای مدیران.",
+      "link": "",
+      "desc": {
+        "en": "Machine-learning sales forecasting with an interactive dashboard for managers.",
+        "fa": "پیش‌بینی فروش با یادگیری ماشین و داشبورد تعاملی برای مدیران."
+      },
       "tech": [
         "Python",
         "React",
@@ -258,12 +426,24 @@
       ]
     },
     {
-      "title": "زیرساخت ابری بانک",
-      "category": "DevOps",
-      "year": "۱۴۰۱",
+      "title": {
+        "en": "Banking cloud platform",
+        "fa": "زیرساخت ابری بانک"
+      },
+      "category": {
+        "en": "DevOps",
+        "fa": "DevOps"
+      },
+      "year": {
+        "en": "2022",
+        "fa": "۱۴۰۱"
+      },
       "image": "",
-      "link": "#",
-      "desc": "مهاجرت سرویس‌ها به Kubernetes با CI/CD خودکار و آپتایم ۹۹.۹٪.",
+      "link": "",
+      "desc": {
+        "en": "Migrated core services to Kubernetes with automated CI/CD and 99.9% uptime.",
+        "fa": "مهاجرت سرویس‌ها به Kubernetes با CI/CD خودکار و آپتایم ۹۹.۹٪."
+      },
       "tech": [
         "Kubernetes",
         "Go",

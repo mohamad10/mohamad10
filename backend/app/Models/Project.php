@@ -11,7 +11,7 @@ class Project extends Model
 
     protected function casts(): array
     {
-        return ['tech' => 'array'];
+        return ['tech' => 'array', 'title' => 'array', 'category' => 'array', 'year' => 'array', 'desc' => 'array'];
     }
 
     public function members(): BelongsToMany
