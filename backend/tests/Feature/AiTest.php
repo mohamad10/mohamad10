@@ -201,4 +201,27 @@ class AiTest extends TestCase
         $this->deleteJson("/api/admin/chats/$id")->assertOk();
         $this->assertDatabaseCount('chat_messages', 0);
     }
+
+    public function test_connection_test_explains_a_missing_key_instead_of_calling_the_provider(): void
+    {
+        Http::fake();
+        Sanctum::actingAs(User::first());
+
+        $this->postJson('/api/admin/ai/test', ['provider' => 'openrouter'])->assertStatus(502)
+            ->assertJsonPath('message', 'OpenRouter: No API key is saved for this provider. Enter the key and press Save.');
+        Http::assertNothingSent();
+    }
+
+    public function test_keys_saved_with_another_app_key_are_flagged(): void
+    {
+        $this->configure(['openrouter']);
+        config(['app.key' => 'base64:'.base64_encode(random_bytes(32))]);
+        app()->forgetInstance('encrypter');
+        \Illuminate\Support\Facades\Crypt::clearResolvedInstances();
+        Sanctum::actingAs(User::first());
+
+        $this->getJson('/api/admin/ai')->assertJsonPath('providers.2.key_unreadable', true)->assertJsonPath('enabled', false);
+        $this->postJson('/api/admin/ai/test', ['provider' => 'openrouter'])->assertStatus(502)
+            ->assertJsonPath('message', 'OpenRouter: The saved API key can no longer be read (APP_KEY changed). Please enter the key again.');
+    }
 }

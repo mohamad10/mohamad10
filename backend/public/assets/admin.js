@@ -488,6 +488,7 @@ function aiTab(p) {
       <div class="prov-head"><b>${esc(pr.label)}</b>${pr.free === true ? '<span class="free">رایگان</span>' : pr.free === false ? '<span class="paid">پولی</span>' : ''}
         ${pr.ready ? '<span class="ok-tag">آماده</span>' : ''}</div>
       ${pr.custom || pr.code === 'ollama' ? `<label class="field"><span>آدرس API (Base URL)</span><input class="bu" dir="ltr" placeholder="${esc(pr.default_base_url || 'https://…/v1')}"></label>` : ''}
+      ${pr.key_unreadable ? '<p class="prov-out err">کلید ذخیره‌شده قابل خواندن نیست (APP_KEY تغییر کرده)؛ کلید را دوباره وارد و ذخیره کنید.</p>' : ''}
       ${pr.keyless ? '' : `<label class="field"><span>کلید API ${pr.has_key ? `<i class="muted">(ذخیره‌شده ${esc(pr.key_hint || '')}${pr.key_from_env ? ' از .env' : ''})</i>` : ''}</span><input class="key" type="password" dir="ltr" autocomplete="off" placeholder="${pr.has_key ? 'برای تغییر، کلید جدید وارد کنید' : 'کلید API'}"></label>`}
       <label class="field"><span>مدل</span><input class="model" dir="ltr" list="ml-${pr.code}" placeholder="${esc(pr.default_model || 'model-name')}"><datalist id="ml-${pr.code}"></datalist></label>
       <div class="row-btns">
@@ -502,7 +503,8 @@ function aiTab(p) {
     $c('.model').value = pr.model || '';
     if ($c('.bu')) $c('.bu').value = pr.base_url || '';
     const values = () => ({ model: $c('.model').value.trim(), ...($c('.bu') ? { base_url: $c('.bu').value.trim() } : {}), ...($c('.key')?.value.trim() ? { api_key: $c('.key').value.trim() } : {}) });
-    const run = async (b, fn) => { b.disabled = true; out.className = 'prov-out muted'; out.textContent = '…'; try { await fn(); } catch (err) { out.className = 'prov-out err'; out.textContent = err.message; } b.disabled = false; };
+    const hint = m => /\b401\b|auth|api key/i.test(m) ? m + ' — کلید API را بررسی کنید (بدون فاصله اضافه) و دوباره «ذخیره» بزنید.' : m;
+    const run = async (b, fn) => { b.disabled = true; out.className = 'prov-out muted'; out.textContent = '…'; try { await fn(); } catch (err) { out.className = 'prov-out err'; out.textContent = hint(err.message); } b.disabled = false; };
     $c('.sv').onclick = e => run(e.target, () => persist({ providers: { [pr.code]: values() } }, `${pr.label} ذخیره شد ✓`));
     $c('.tst').onclick = e => run(e.target, async () => {
       await persist({ providers: { [pr.code]: values() } }, null, false);

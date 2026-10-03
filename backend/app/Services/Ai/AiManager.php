@@ -42,6 +42,7 @@ class AiManager
                 'has_key' => filled($p['api_key']), 'key_from_env' => blank($s['providers'][$code]['api_key'] ?? null) && filled(env($def['env'])),
                 'key_hint' => filled($p['api_key']) ? '…'.substr($p['api_key'], -4) : null,
                 'ready' => $this->ready($code),
+                'key_unreadable' => $p['key_unreadable'],
             ];
         }
 
@@ -86,11 +87,12 @@ class AiManager
         $def = config("ai.providers.$code") ?? throw new AiException("Unknown provider: $code");
         $over = $this->settings()['providers'][$code] ?? [];
         $key = null;
+        $broken = false;
         if (filled($over['api_key'] ?? null)) {
             try {
                 $key = Crypt::decryptString($over['api_key']);
             } catch (DecryptException) {
-                $key = null; // APP_KEY changed; the key must be entered again
+                $broken = true; // saved with a different APP_KEY; it must be entered again
             }
         }
 
@@ -99,6 +101,7 @@ class AiManager
             'model' => ($over['model'] ?? '') ?: $def['model'],
             'base_url' => ($over['base_url'] ?? '') ?: $def['base_url'],
             'api_key' => $key ?? env($def['env']),
+            'key_unreadable' => $broken,
         ];
     }
 
@@ -130,6 +133,11 @@ class AiManager
         $errors = [];
         foreach ($chain as $code) {
             $p = $this->provider($code);
+            if (! $this->ready($code)) {
+                $errors[] = "{$p['label']}: ".$this->notReadyReason($p);
+
+                continue;
+            }
             try {
                 return ['text' => trim($this->driver($p['driver'])->complete($p, $system, $messages, $maxTokens)), 'provider' => $code, 'model' => $p['model']];
             } catch (\Throwable $e) {
@@ -138,6 +146,16 @@ class AiManager
             }
         }
         throw new AiException(implode(' | ', $errors));
+    }
+
+    private function notReadyReason(array $p): string
+    {
+        return match (true) {
+            $p['key_unreadable'] => 'The saved API key can no longer be read (APP_KEY changed). Please enter the key again.',
+            ! ($p['keyless'] ?? false) && blank($p['api_key']) => 'No API key is saved for this provider. Enter the key and press Save.',
+            blank($p['model']) => 'No model is set.',
+            default => 'The API address (Base URL) is missing.',
+        };
     }
 
     public function models(string $code): array
