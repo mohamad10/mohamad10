@@ -59,11 +59,11 @@
     </script>
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 </head>
-<body>
+<body id="top">
 <a class="skip" href="#main">{{ $name }}</a>
 <div class="progress" aria-hidden="true"></div>
 
-<header class="nav" id="top">
+<header class="nav">
     <div class="container nav-inner">
         <a href="{{ Locales::url($locale) }}" class="logo">
             <span class="logo-mark">{{ mb_substr($name, 0, 1) }}</span><span>{{ $name }}</span>
@@ -285,6 +285,24 @@
         <a href="#top" class="to-top">{{ __('site.footer.top') }} <x-icon name="arrow-up"/></a>
     </div>
 </footer>
+
+<button class="fab to-top-fab" id="toTop" aria-label="{{ __('site.footer.top') }}" hidden><x-icon name="arrow-up"/></button>
+
+@if (count(Locales::codes()) > 1)
+    <div class="lang-banner" id="langBanner" hidden>
+        @foreach (Locales::all() as $code => $l)
+            @continue($code === $locale)
+            <template data-lang="{{ $code }}"><span lang="{{ $code }}" dir="{{ $l['dir'] }}">{{ __('site.lang_suggest', [], $code) }}</span>
+                <a class="btn primary sm" href="{{ Locales::url($code) }}" hreflang="{{ $code }}">{{ __('site.lang_switch', [], $code) }}</a></template>
+        @endforeach
+        <div class="lb-body"></div>
+        <button class="icon-btn" data-dismiss aria-label="{{ __('site.dismiss') }}"><x-icon name="x"/></button>
+    </div>
+@endif
+
+@if ($chat)
+    @include('site.partials.chat', ['chat' => $chat])
+@endif
 
 <script src="{{ asset_v('assets/site.js') }}" defer></script>
 </body>

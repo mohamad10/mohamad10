@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Notifications\NewContactMessage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,8 @@ class ContactController extends Controller
             'body' => ['required', 'string', 'min:5', 'max:5000'],
             'website' => ['prohibited'], // honeypot
         ]);
-        ContactMessage::create([...$data, 'ip' => $request->ip()]);
+        $message = ContactMessage::create([...$data, 'ip' => $request->ip()]);
+        NewContactMessage::dispatchTo($message);
 
         return response()->json(['ok' => true], 201);
     }

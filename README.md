@@ -33,6 +33,15 @@ The new language appears at `/{code}`, in the language switcher, in the sitemap 
 - **Delivery:** the page uses `srcset`, so each browser downloads the right size. A size is generated on its first request and stored under `storage/app/public/cache/`, after which the web server serves it as a static file.
 - **No upscaling:** images are never enlarged.
 
+## AI features
+Configure them in **Admin → هوش مصنوعی (AI)**. API keys are stored encrypted and never sent back to the browser.
+
+- **Providers:** Google Gemini, Groq, OpenRouter, Cerebras, Mistral, GitHub Models, Hugging Face and Ollama (local) all have free tiers. Anthropic Claude (via the official SDK), OpenAI, DeepSeek and xAI are paid. Any other OpenAI-compatible service can be added as **custom**.
+- **Fallback chain:** providers are tried in the order you set. If one fails (quota, outage, bad key), the next one takes over automatically.
+- **Website chat assistant:** answers visitors in their own language, using only the site's content. When a visitor wants a project, it collects their name, email and a brief, and files it as a contact message. Admins can read every transcript.
+- **Admin writing tools:** next to text fields you get *translate*, *improve* and *generate* buttons. There is also one-click translation of all missing texts for a language, AI skill suggestions for members, and AI reply drafts for contact messages.
+- **Email alerts:** set `MAIL_NOTIFY_ADDRESS` (and the mail settings) to get an email for every new message or chat lead.
+
 ## API
 | Method | Path | Description |
 |---|---|---|

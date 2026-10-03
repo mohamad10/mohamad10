@@ -110,6 +110,9 @@ return [
     |
     */
 
+    // Where new contact messages and chat leads are emailed (leave empty to disable)
+    'notify_address' => env('MAIL_NOTIFY_ADDRESS'),
+
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
